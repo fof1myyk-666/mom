@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>З Днем Народження, Мамо!</title>
+    <style>
+        :root {
+            --bg-color: #120206;
+            --card-bg: rgba(45, 10, 20, 0.88);
+            --primary-red: #ff2a55;
+            --accent-gold: #ffd700;
+            --soft-pink: #ffb6c1;
+            --text-color: #ffffff;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background: radial-gradient(circle at center, #2b0510 0%, #0d0104 100%);
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow-x: hidden;
+            position: relative;
+            padding: 20px 10px;
+        }
+
+        /* Анімація падаючих пелюсток */
+        .petal {
+            position: fixed;
+            background: linear-gradient(135deg, #ff2a55, #ff758c);
+            border-radius: 15px 0 15px 0;
+            opacity: 0.7;
+            pointer-events: none;
+            z-index: 1;
+            animation: fall linear infinite;
+        }
+
+        @keyframes fall {
+            0% { transform: translateY(-10vh) rotate(0deg); opacity: 0.9; }
+            100% { transform: translateY(105vh) rotate(360deg); opacity: 0.1; }
+        }
+
+        .container {
+            width: 100%;
+            max-width: 680px;
+            background: var(--card-bg);
+            border: 2px solid var(--primary-red);
+            border-radius: 24px;
+            padding: 35px 25px;
+            box-shadow: 0 0 35px rgba(255, 42, 85, 0.45);
+            backdrop-filter: blur(12px);
+            text-align: center;
+            position: relative;
+            z-index: 10;
+        }
+
+        h1 {
+            color: var(--primary-red);
+            font-size: 2.2rem;
+            margin-bottom: 15px;
+            text-shadow: 0 0 12px rgba(255, 42, 85, 0.6);
+        }
+
+        h2 {
+            color: var(--soft-pink);
+            font-size: 1.6rem;
+            margin-bottom: 15px;
+        }
+
+        p {
+            color: #ffe6ea;
+            font-size: 1.15rem;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .step {
+            display: none;
+        }
+
+        .step.active {
+            display: block;
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        input[type="text"], input[type="number"] {
+            width: 80%;
+            max-width: 320px;
+            padding: 14px 20px;
+            margin: 10px 0 20px 0;
+            border-radius: 12px;
+            border: 2px solid var(--primary-red);
+            background: rgba(15, 0, 5, 0.7);
+            color: #fff;
+            font-size: 1.3rem;
+            text-align: center;
+            outline: none;
+            transition: 0.3s;
+        }
+
+        input:focus {
+            border-color: var(--accent-gold);
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
+        }
+
+        button {
+            background: linear-gradient(45deg, #ff2a55, #b30024);
+            color: white;
+            border: none;
+            padding: 14px 32px;
+            font-size: 1.15rem;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 20px rgba(255, 42, 85, 0.5);
+        }
+
+        button:hover {
+            transform: translateY(-2px) scale(1.04);
+            box-shadow: 0 8px 25px rgba(255, 42, 85, 0.8);
+        }
+
+        .hint {
+            font-size: 0.95rem;
+            color: var(--accent-gold);
+            margin-top: 12px;
+            min-height: 24px;
+        }
+
+        /* Зона інтерактивної гри */
+        .hearts-game-area {
+            width: 100%;
+            height: 220px;
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 16px;
+            position: relative;
+            overflow: hidden;
+            margin: 15px 0 20px 0;
+            border: 1px dashed var(--primary-red);
+        }
+
+        .collectable-heart {
+            position: absolute;
+            font-size: 2.2rem;
+            cursor: pointer;
+            user-select: none;
+            transition: transform 0.2s;
+            filter: drop-shadow(0 0 8px #ff2a55);
+        }
+
+        .collectable-heart:hover {
+            transform: scale(1.35);
+        }
+
+        /* Ребус кастомні картки */
+        .rebus-grid {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin: 20px 0;
+        }
+
+        .rebus-card {
+            background: rgba(20, 5, 10, 0.8);
+            border: 2px solid var(--accent-gold);
+            border-radius: 14px;
+            padding: 12px 16px;
+            min-width: 110px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+        }
+
+        .rebus-icon {
+            font-size: 2.5rem;
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .rebus-sub {
+            font-size: 0.9rem;
+            color: var(--soft-pink);
+            font-weight: bold;
+        }
+
+        .rebus-plus {
+            font-size: 1.5rem;
+            color: var(--accent-gold);
+            font-weight: bold;
+        }
+
+        /* Блок вітання */
+        .greeting-card {
+            background: rgba(255, 215, 0, 0.07);
+            border: 2px solid var(--accent-gold);
+            border-radius: 20px;
+            padding: 25px;
+            margin-top: 20px;
+            box-shadow: inset 0 0 20px rgba(255, 215, 0, 0.1);
+        }
+
+        .greeting-text {
+            color: #fff;
+            font-size: 1.15rem;
+            line-height: 1.8;
+            text-align: left;
+            margin-bottom: 15px;
+        }
+
+        .signature {
+            text-align: right;
+            font-size: 1.3rem;
+            color: var(--accent-gold);
+            font-weight: bold;
+            font-style: italic;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Анімовані пелюстки -->
+    <div id="petals-container"></div>
+
+    <div class="container">
+        
+        <!-- КРОК 0: СТАРТ -->
+        <div class="step active" id="step-0">
+            <h1> З Днем Народження, Мамо! </h1>
+            <p>Мамуля, сьогодні дуже чудовий день. Сьогодні твоє день народження тому я підготував тобі такий подарунок!</p>
+            <p>На тебе чекає 3 легенькі рівні які підготував для тебе а в кінці буде сюрприз!</p>
+            <button onclick="nextStep(1)">Пагналі </button>
+        </div>
+
+        <!-- КРОК 1: КОД ВІКУ -->
+        <div class="step" id="step-1">
+            <h2>Рівень 1: Квітковий Сейф </h2>
+            <p>Це число відноситься до цього дня. Підказка - Скільки тобі років сьогодні??</p>
+            <input type="number" id="code-input" placeholder="Введи число">
+            <br>
+            <button onclick="checkStep1()">Відкрити сейф 🔓</button>
+            <div class="hint" id="hint-1"></div>
+        </div>
+
+        <!-- КРОК 2: ЛОВЕЦЬ СЕРДЕЧОК -->
+        <div class="step" id="step-2">
+            <h2>Рівень 2: Ловець Побажань </h2>
+            <p>Збери 5 сяючих сердечок!</p>
+            <p>Зібрано: <span id="hearts-count" style="color:var(--accent-gold); font-size: 1.4rem; font-weight:bold;">0</span> / 5</p>
+            <div class="hearts-game-area" id="game-area"></div>
+            <button id="step2-btn" onclick="nextStep(3)" style="display:none;">Наступний рівень ➡️</button>
+        </div>
+
+        <!-- КРОК 3: РЕБУС -->
+        <div class="step" id="step-3">
+            <h2>Рівень 3: Святковий Ребус </h2>
+            <p>Розгадай ребус! Візьми перші літери від кожного зображеного предмета:</p>
+            
+            <div class="rebus-grid">
+                <div class="rebus-card">
+                    <span class="rebus-icon">🚗</span>
+                    <span class="rebus-sub">Машина</span>
+                </div>
+                <span class="rebus-plus">+</span>
+                <div class="rebus-card">
+                    <span class="rebus-icon">🍍</span>
+                    <span class="rebus-sub">Ананас</span>
+                </div>
+                <span class="rebus-plus">+</span>
+                <div class="rebus-card">
+                    <span class="rebus-icon">🚗</span>
+                    <span class="rebus-sub">Машина</span>
+                </div>
+                <span class="rebus-plus">+</span>
+                <div class="rebus-card">
+                    <span class="rebus-icon">🍍</span>
+                    <span class="rebus-sub">Ананас</span>
+                </div>
+            </div>
+
+            <p style="font-size: 1rem; color: var(--soft-pink);">Яке найрідніше слово утворилося з перших літер?</p>
+            <input type="text" id="rebus-input" placeholder="Твоя відповідь">
+            <br>
+            <button onclick="checkStep3()">Відкрити фінал </button>
+            <div class="hint" id="hint-3"></div>
+        </div>
+
+        <!-- КРОК 4: ФІНАЛЬНЕ ПРИВІТАННЯ -->
+        <div class="step" id="step-4">
+            <h1>🎉 З Днем Народження, Мамусю! 🎉</h1>
+            <p style="color: var(--accent-gold); font-size: 1.3rem; font-weight: bold;">Ти успішно пройшла весь квест!</p>
+            
+            <div class="greeting-card">
+                <div class="greeting-text">
+                    <p>❤️ <strong>Дорога, найрідніша та найулюбленіша Мамочка!</strong></p>
+                    <p>Вітаю тебе з 38-річчям! Дякую тобі за твоє безмежне тепло, щоденну турботу, ніжність та підтримку. Ти — найсвітліша людина в моєму житті, яка завжди зігріє, зрозуміє та дасть найкращу пораду.</p>
+                    <p>🌹 Бажаю тобі міцного здоров'я, щоденного натхнення, щоб твої очі завжди сяяли від щастя, а навколо завжди цвіли твої улюблені квіти і панував спокій та затишок.</p>
+                    <p>✨ Нехай кожна мить дарує радість, посмішки, а всі твої найзавітніші мрії обов'язково здійснюються!</p>
+                </div>
+                <div class="signature">
+                    З любов'ю та ніжністю! ❤️✨
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // Анімація падаючих пелюсток
+        const petalsContainer = document.getElementById('petals-container');
+        for (let i = 0; i < 30; i++) {
+            const petal = document.createElement('div');
+            petal.className = 'petal';
+            petal.style.left = Math.random() * 100 + 'vw';
+            petal.style.width = Math.random() * 14 + 10 + 'px';
+            petal.style.height = Math.random() * 14 + 10 + 'px';
+            petal.style.animationDuration = Math.random() * 5 + 4 + 's';
+            petal.style.animationDelay = Math.random() * 4 + 's';
+            petalsContainer.appendChild(petal);
+        }
+
+        // Перехід між кроками
+        function nextStep(stepNumber) {
+            document.querySelectorAll('.step').forEach(el => el.classList.remove('active'));
+            document.getElementById(`step-${stepNumber}`).classList.add('active');
+            
+            if (stepNumber === 2) {
+                initHeartsGame();
+            }
+        }
+
+        // Рівень 1
+        function checkStep1() {
+            const val = document.getElementById('code-input').value;
+            const hint = document.getElementById('hint-1');
+            if (val === '38') {
+                nextStep(2);
+            } else {
+                hint.innerText = 'Підказка: Скільки років мамі виповнюється сьогодні? 😉';
+            }
+        }
+
+        // Рівень 2 (Гра з сердечками)
+        let collectedHearts = 0;
+        function initHeartsGame() {
+            const area = document.getElementById('game-area');
+            area.innerHTML = '';
+            collectedHearts = 0;
+            document.getElementById('hearts-count').innerText = collectedHearts;
+            
+            for (let i = 0; i < 5; i++) {
+                spawnHeart(area);
+            }
+        }
+
+        function spawnHeart(area) {
+            const heart = document.createElement('div');
+            heart.className = 'collectable-heart';
+            heart.innerText = '💖';
+            heart.style.top = Math.random() * 150 + 'px';
+            heart.style.left = Math.random() * (area.clientWidth - 50) + 'px';
+            
+            heart.onclick = function() {
+                this.remove();
+                collectedHearts++;
+                document.getElementById('hearts-count').innerText = collectedHearts;
+                if (collectedHearts >= 5) {
+                    document.getElementById('step2-btn').style.display = 'inline-block';
+                }
+            };
+            area.appendChild(heart);
+        }
+
+        // Рівень 3 (Ребус)
+        function checkStep3() {
+            const val = document.getElementById('rebus-input').value.trim().toLowerCase();
+            const hint = document.getElementById('hint-3');
+            if (val === 'мама' || val === 'мамуля' || val === 'мамочка') {
+                nextStep(4);
+            } else {
+                hint.innerText = 'Підказка: Перша літела М остання А.';
+            }
+        }
+    </script>
+</body>
+</html>
